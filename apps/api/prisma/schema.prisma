@@ -1,0 +1,181 @@
+// ShadowLaunch - Private Token Launchpad Database Schema
+// Built for Aleo's zero-knowledge infrastructure
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model Launch {
+  id                     String          @id @default(uuid())
+  name                   String
+  description            String?
+  tokenSymbol            String
+  totalSupply            Float           // Total tokens for sale
+  pricePerToken          Float           // Price in ALEO
+  commitDurationBlocks   Int             // Duration in blocks
+  revealDurationBlocks   Int             // Duration in blocks
+
+  // Phase timestamps
+  commitStartTime        DateTime?
+  commitEndTime          DateTime?
+  revealStartTime        DateTime?
+  revealEndTime          DateTime?
+
+  status                 String          @default("PENDING") // PENDING, COMMIT, REVEAL, DISTRIBUTION, ENDED, CANCELLED, FAILED
+
+  // Statistics
+  participantCount       Int             @default(0)
+  totalCommitted         Float           @default(0) // Hidden until reveal
+  totalRevealed          Float           @default(0)
+  tokensDistributed      Float           @default(0)
+
+  // Creator
+  creatorAddress         String?
+  creatorAddressHash     String?
+
+  // Aleo-specific - On-chain tracking
+  programId              String          @default("shadowlaunch_v1.aleo")
+  transactionId          String?         // Transaction ID from create_launch
+  onChainStatus          String?         // 'pending' | 'confirmed' | 'failed'
+  onChainBlockHeight     Int?            // Block height when confirmed
+  launchIdHash           String?         // Numeric hash used on-chain
+
+  // Soft cap & Anti-whale protection
+  softCap                Float?          // Minimum to raise (if not met = refund)
+  hardCap                Float?          // Maximum to raise
+  maxPerWallet           Float?          // Anti-whale: max contribution per wallet
+  minPerWallet           Float?          // Minimum contribution amount
+
+  // Project details & Social links
+  longDescription        String?         // Long-form about section
+  websiteUrl             String?
+  twitterUrl             String?
+  discordUrl             String?
+  telegramUrl            String?
+  logoUrl                String?
+
+  // Trust indicators
+  isAudited              Boolean         @default(false)
+  auditUrl               String?
+  auditFirm              String?
+  isKycVerified          Boolean         @default(false)
+  kycProvider            String?
+  isSafu                 Boolean         @default(false)  // Funds secured indicator
+
+  // Tokenomics allocations (percentages)
+  teamAllocation         Float?          // % for team
+  communityAllocation    Float?          // % for community/public sale
+  liquidityAllocation    Float?          // % for liquidity
+  marketingAllocation    Float?          // % for marketing
+  reserveAllocation      Float?          // % for reserve/treasury
+
+  // Vesting schedule
+  vestingEnabled         Boolean         @default(false)
+  vestingCliff           Int?            // Cliff period in days
+  vestingDuration        Int?            // Total vesting duration in days
+  vestingInitialRelease  Float?          // % released immediately
+
+  // Relations
+  pendingCommits         PendingCommit[]
+  allocations            Allocation[]
+
+  createdAt              DateTime        @default(now())
+  updatedAt              DateTime        @updatedAt
+
+  @@index([status])
+  @@index([creatorAddress])
+  @@index([commitEndTime])
+  @@index([revealEndTime])
+  @@index([tokenSymbol])
+}
+
+model PendingCommit {
+  id                  String    @id @default(uuid())
+  launchId            String
+  userAddressHash     String    // Hashed user address for privacy
+  commitmentHash      String    // Hash of (amount + secret)
+  encryptedSecret     String?   // Optional encrypted backup
+  amount              Float     // Committed ALEO amount
+  confirmed           Boolean   @default(false)
+  transactionId       String?
+  revealed            Boolean   @default(false)
+  revealTransactionId String?
+
+  // Escrow tracking (for future credits.aleo integration)
+  escrowTxId          String?   // credits.transfer transaction
+  escrowStatus        String?   // 'locked' | 'released' | 'refunded'
+  escrowBlockHeight   Int?      // Block height when escrow confirmed
+
+  // Relations
+  launch              Launch    @relation(fields: [launchId], references: [id], onDelete: Cascade)
+
+  createdAt           DateTime  @default(now())
+  confirmedAt         DateTime?
+  revealedAt          DateTime?
+  updatedAt           DateTime  @updatedAt
+
+  @@index([launchId])
+  @@index([userAddressHash])
+  @@index([confirmed])
+  @@index([revealed])
+  @@unique([launchId, userAddressHash])
+}
+
+model Allocation {
+  id                String    @id @default(uuid())
+  launchId          String
+  userAddressHash   String
+
+  // Allocation details
+  committedAmount   Float     // Original ALEO committed
+  tokensAllocated   Float     // Tokens received
+  refundAmount      Float     @default(0) // Excess ALEO refunded
+
+  // Distribution status
+  distributed       Boolean   @default(false)
+  distributionTxId  String?
+
+  // Claim status
+  claimed           Boolean   @default(false)
+  claimedAt         DateTime?
+  claimTxId         String?
+
+  // Refund status (for failed launches / soft cap not met)
+  refunded          Boolean   @default(false)
+  refundedAt        DateTime?
+  refundTxId        String?
+
+  // Vesting tracking
+  totalVested       Float     @default(0)  // Total tokens vested so far
+  lastVestingClaim  DateTime?
+
+  // Relations
+  launch            Launch    @relation(fields: [launchId], references: [id], onDelete: Cascade)
+
+  // Timestamps
+  calculatedAt      DateTime  @default(now())
+  distributedAt     DateTime?
+
+  @@unique([launchId, userAddressHash])
+  @@index([launchId])
+  @@index([userAddressHash])
+  @@index([distributed])
+  @@index([claimed])
+  @@index([refunded])
+}
+
+model User {
+  id            String   @id @default(uuid())
+  addressHash   String   @unique
+  nonce         String   // For authentication
+  lastLogin     DateTime?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@index([addressHash])
+}
