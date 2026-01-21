@@ -1,202 +1,289 @@
+<div align="center">
+
 # ShadowLaunch
 
-> **Fair Token Launches on Aleo — No Snipers. No Bots. No Front-Running.**
+### Fair Token Launches on Aleo — No Snipers. No Bots. No Front-Running.
 
-ShadowLaunch is a privacy-preserving token launchpad built on Aleo that eliminates unfair advantages in token sales through cryptographic commit-reveal mechanisms and zero-knowledge proofs.
+[![Aleo](https://img.shields.io/badge/Built%20on-Aleo-blue?style=for-the-badge&logo=data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAADASURBVHgBjZLBDcIwDEV/WoYoG8AGsAFsQDdgBDagG5QN6AZ0g7ABbEA3aDeo/kkdFKWq+6Qoif3t2HEEBkRENV4xPPGO4YkXRORjLMYYaq0V1lpfWGsP1trNf6mqirIsEUKAiBCRz7X5vXOOzrkfZ+fcLqV0+FdUVZWTJPnudW6992ee5x9xHC++RkQ4hEgpSyL64D0+BqF9SkT0a4wxW2PMPgjCI631MQiCTRiGy67rFl3X7YQQq6IoFnVdr/8An6Y/GdZf7e4AAAAASUVORK5CYII=)](https://aleo.org)
+[![Leo](https://img.shields.io/badge/Smart%20Contract-Leo-purple?style=for-the-badge)](https://developer.aleo.org/leo/)
+[![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)](LICENSE)
+[![Hackathon](https://img.shields.io/badge/Aleo-Hackathon%202025-orange?style=for-the-badge)](https://aleo.org)
 
----
+**Privacy-preserving token launchpad eliminating MEV exploitation through ZK-powered commit-reveal mechanics**
 
-## The Problem
+[View Demo](#demo-video) · [Smart Contract](#deployed-contract) · [Try It Locally](#quick-start)
 
-Traditional token launches suffer from:
-- **Front-running** — MEV bots detect pending transactions and jump ahead
-- **Sniping** — Bots monitor mempool and snipe launches at the exact second
-- **Whale manipulation** — Large participants can see others' commitments and adjust
-- **Information asymmetry** — Some participants have unfair timing advantages
-
-**Result:** Retail users consistently get worse allocations than sophisticated actors.
+</div>
 
 ---
 
-## Our Solution
+## Deployed Contract
 
-ShadowLaunch uses a **two-phase commit-reveal scheme** powered by Aleo's zero-knowledge infrastructure:
+| Network | Program ID | Explorer |
+|---------|------------|----------|
+| **Testnet** | `shadowlaunch_v1.aleo` | [View on Aleo Explorer](https://testnet.aleoscan.io/program?id=shadowlaunch_v1.aleo) |
 
-### Phase 1: Commit (Hidden Bids)
-- Contributors submit **sealed commitments** (hash of amount + secret)
-- Nobody knows how much others are committing
-- All bids are hidden until the commit phase ends
+```
+Program ID: shadowlaunch_v1.aleo
+Network: Aleo Testnet Beta
+```
 
-### Phase 2: Reveal (Fair Allocation)
-- Contributors reveal their commitments by providing their secret
-- Smart contract verifies the hash matches
-- Tokens distributed **proportionally** based on revealed amounts
+---
 
-**Result:** Every participant gets fair treatment regardless of timing or resources.
+## Demo Video
+
+https://github.com/user-attachments/assets/YOUR_VIDEO_ID
+
+> *Full walkthrough: Creating a launch, committing funds, revealing, and claiming tokens*
+
+---
+
+## The Problem We Solve
+
+Every token launch on transparent blockchains suffers from the same issues:
+
+| Problem | Impact | Who Wins |
+|---------|--------|----------|
+| **Front-running** | MEV bots see your tx and jump ahead | Bots |
+| **Sniping** | Automated scripts grab allocations instantly | Whales |
+| **Information Leakage** | Everyone sees what others are bidding | Insiders |
+| **Timing Attacks** | Network latency determines allocation | Infrastructure |
+
+**Result:** Regular users consistently lose to sophisticated actors.
+
+---
+
+## Our Solution: ZK Commit-Reveal
+
+ShadowLaunch uses Aleo's zero-knowledge proofs to create a **truly fair** launch mechanism:
+
+```
+┌──────────────────────────────────────────────────────────────────────────┐
+│                           SHADOWLAUNCH PROTOCOL                          │
+├──────────────────────────────────────────────────────────────────────────┤
+│                                                                          │
+│   PHASE 1: COMMIT                      PHASE 2: REVEAL                   │
+│   ═══════════════                      ═══════════════                   │
+│                                                                          │
+│   User A: Hash(100 + secret_a) ───┐    User A reveals: 100 ALEO         │
+│   User B: Hash(50 + secret_b)  ───┼──► User B reveals: 50 ALEO          │
+│   User C: Hash(200 + secret_c) ───┘    User C reveals: 200 ALEO         │
+│                                                                          │
+│   ❌ Nobody knows amounts              ✓ Pro-rata allocation:            │
+│   ❌ Can't front-run                      A: 28.5% of tokens             │
+│   ❌ Can't adjust based on others         B: 14.3% of tokens             │
+│                                           C: 57.1% of tokens             │
+│                                                                          │
+└──────────────────────────────────────────────────────────────────────────┘
+```
+
+### Why This Works
+
+1. **Commitments are binding** — Hash(amount + secret) cannot be changed
+2. **Amounts are hidden** — ZK proofs verify without revealing
+3. **No timing advantage** — All commits treated equally regardless of when submitted
+4. **Trustless verification** — Smart contract enforces fairness on-chain
 
 ---
 
 ## Key Features
 
-| Feature | Description |
-|---------|-------------|
-| **Private Commitments** | Your bid amount is hidden until everyone reveals |
-| **Anti-Whale Protection** | Max contribution limits prevent domination |
-| **Soft/Hard Caps** | Flexible fundraising targets with automatic refunds |
-| **On-Chain Verification** | All logic runs on Aleo smart contracts |
-| **Leo Wallet Integration** | Seamless wallet connection and transactions |
-| **Real-Time Status** | Live updates on launch progress and phases |
+| Feature | Implementation |
+|---------|----------------|
+| **Private Commitments** | BHP256 hash of (amount + user-generated secret) |
+| **Anti-Whale Limits** | Configurable max contribution per address |
+| **Flexible Caps** | Soft cap (minimum) and hard cap (maximum) fundraise |
+| **On-Chain Logic** | 100% of verification runs on Aleo smart contract |
+| **Wallet Integration** | Native Leo Wallet support with transaction signing |
+| **Real-Time UI** | Live phase indicators, countdown timers, status updates |
 
 ---
 
-## How It Works
+## Technical Architecture
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
-│                        SHADOWLAUNCH FLOW                        │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│  1. CREATE          2. COMMIT           3. REVEAL      4. CLAIM │
-│  ────────          ────────           ────────      ────────    │
-│                                                                 │
-│  Creator sets      Users submit       Users reveal   Tokens     │
-│  launch params     sealed bids        their secrets  distributed│
-│  on-chain          (hash only)        (verify hash)  fairly     │
-│                                                                 │
-│  [Token Info]      [Amount+Secret]    [Secret]       [Tokens]   │
-│       │                  │                │              │      │
-│       ▼                  ▼                ▼              ▼      │
-│  ┌─────────┐        ┌─────────┐      ┌─────────┐   ┌─────────┐  │
-│  │ Deploy  │───────▶│ Hidden  │─────▶│ Verify  │──▶│ Allocate│  │
-│  │ Launch  │        │ Commits │      │ & Count │   │ Tokens  │  │
-│  └─────────┘        └─────────┘      └─────────┘   └─────────┘  │
-│                                                                 │
+│                         FRONTEND (Next.js 14)                    │
+│  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐              │
+│  │ Create Page │  │ Launch Page │  │  Dashboard  │              │
+│  │  /create    │  │ /launch/:id │  │ /dashboard  │              │
+│  └──────┬──────┘  └──────┬──────┘  └──────┬──────┘              │
+│         │                │                │                      │
+│         └────────────────┼────────────────┘                      │
+│                          ▼                                       │
+│              ┌───────────────────────┐                          │
+│              │   Leo Wallet Adapter  │                          │
+│              │   (Transaction Sign)  │                          │
+│              └───────────┬───────────┘                          │
+└──────────────────────────┼──────────────────────────────────────┘
+                           │
+┌──────────────────────────┼──────────────────────────────────────┐
+│                          ▼            BACKEND (Express.js)       │
+│              ┌───────────────────────┐                          │
+│              │    REST API Server    │                          │
+│              │    (Port 3014)        │                          │
+│              └───────────┬───────────┘                          │
+│                          │                                       │
+│    ┌─────────────────────┼─────────────────────┐                │
+│    ▼                     ▼                     ▼                │
+│ ┌──────────┐      ┌──────────┐          ┌──────────┐           │
+│ │ Launch   │      │ Commit   │          │ Reveal   │           │
+│ │ Service  │      │ Service  │          │ Service  │           │
+│ └────┬─────┘      └────┬─────┘          └────┬─────┘           │
+│      └─────────────────┼─────────────────────┘                  │
+│                        ▼                                         │
+│              ┌───────────────────────┐                          │
+│              │   Prisma ORM + SQLite │                          │
+│              └───────────────────────┘                          │
+└─────────────────────────────────────────────────────────────────┘
+                           │
+                           ▼
+┌─────────────────────────────────────────────────────────────────┐
+│                    ALEO BLOCKCHAIN (Testnet)                     │
+│                                                                  │
+│  ┌─────────────────────────────────────────────────────────┐    │
+│  │              shadowlaunch_v1.aleo                        │    │
+│  │                                                          │    │
+│  │  Transitions:                     Mappings:              │    │
+│  │  ├─ create_launch()              ├─ launch_phase        │    │
+│  │  ├─ commit()                     ├─ commitments         │    │
+│  │  ├─ reveal()                     ├─ reveals             │    │
+│  │  └─ end_reveal_phase()           └─ total_revealed      │    │
+│  │                                                          │    │
+│  └─────────────────────────────────────────────────────────┘    │
 └─────────────────────────────────────────────────────────────────┘
 ```
 
 ---
 
+## Smart Contract Highlights
+
+```leo
+program shadowlaunch_v1.aleo {
+    // Private commitment record - only owner can see amount
+    record Commitment {
+        owner: address,
+        launch_id: field,
+        amount: u64,
+        secret: field,
+        commitment_hash: field,
+    }
+
+    // Create new token launch with parameters
+    async transition create_launch(
+        launch_id: field,
+        token_symbol: field,
+        total_supply: u64,
+        price_per_token: u64,
+        commit_duration: u32,
+        reveal_duration: u32,
+    ) -> Future;
+
+    // Submit sealed commitment (amount hidden)
+    async transition commit(
+        launch_id: field,
+        amount: u64,
+        secret: field,
+    ) -> (Commitment, Future);
+
+    // Reveal commitment and verify hash
+    async transition reveal(
+        commitment: Commitment,
+    ) -> Future;
+}
+```
+
+**Privacy Features:**
+- `BHP256::hash_to_field()` for commitment hashing
+- Private records hide amounts until reveal
+- Address hashing prevents tracking
+
+---
+
+## Quick Start
+
+### Prerequisites
+- Node.js 18+
+- [Leo Wallet](https://www.leo.app/) browser extension
+- Testnet ALEO from [faucet](https://faucet.aleo.org)
+
+### Run Locally
+
+```bash
+# Clone
+git clone https://github.com/alberteinstien62-blip/Shadow-Launch.git
+cd Shadow-Launch
+
+# Install
+npm install
+
+# Setup database
+cd apps/api && npx prisma db push && cd ../..
+
+# Configure environment
+cp apps/web/.env.example apps/web/.env.local
+
+# Start servers (2 terminals)
+cd apps/api && npm run dev    # Terminal 1: API on :3014
+cd apps/web && npm run dev    # Terminal 2: Web on :3004
+```
+
+Open http://localhost:3004 and connect your Leo Wallet.
+
+---
+
+## User Flow
+
+| Step | Action | What Happens |
+|------|--------|--------------|
+| 1 | **Connect Wallet** | Leo Wallet authentication |
+| 2 | **Create Launch** | Set token params, deploy to Aleo |
+| 3 | **Share Link** | Distribute launch URL |
+| 4 | **Commit Phase** | Users submit hidden bids |
+| 5 | **Reveal Phase** | Users prove their commitments |
+| 6 | **Distribution** | Pro-rata token allocation |
+
+---
+
 ## Tech Stack
 
-| Layer | Technology |
-|-------|------------|
-| **Blockchain** | Aleo (Leo smart contracts) |
-| **Frontend** | Next.js 14, React, TailwindCSS |
-| **Backend** | Express.js, Prisma ORM |
-| **Database** | SQLite (development) |
-| **Wallet** | Leo Wallet Adapter |
-| **Styling** | Framer Motion, Custom Cyber Theme |
+| Component | Technology |
+|-----------|------------|
+| Smart Contract | Leo (Aleo) |
+| Frontend | Next.js 14, React 18, TailwindCSS |
+| Backend | Express.js, TypeScript |
+| Database | Prisma ORM, SQLite |
+| Wallet | Leo Wallet Adapter |
+| Animations | Framer Motion |
+| Styling | Cyberpunk Theme, Glass Morphism |
 
 ---
 
 ## Project Structure
 
 ```
-shadowlaunch/
+Shadow-Launch/
+├── contracts/                 # Leo smart contract
+│   └── src/main.leo          # Core protocol logic
 ├── apps/
-│   ├── api/                 # Express.js backend
+│   ├── api/                  # Express.js backend
 │   │   ├── src/
-│   │   │   ├── routes/      # API endpoints
-│   │   │   ├── services/    # Business logic
-│   │   │   └── middleware/  # Auth, validation
-│   │   └── prisma/          # Database schema
-│   │
-│   └── web/                 # Next.js frontend
+│   │   │   ├── services/     # Business logic
+│   │   │   ├── routes/       # API endpoints
+│   │   │   └── utils/        # Crypto helpers
+│   │   └── prisma/           # Database schema
+│   └── web/                  # Next.js frontend
 │       └── src/
-│           ├── app/         # Pages (create, launch, dashboard)
-│           ├── components/  # UI components
-│           └── lib/         # Utilities
-│
-├── contracts/               # Leo smart contracts
-│   └── src/
-│       └── main.leo         # ShadowLaunch program
-│
+│           ├── app/          # Pages
+│           └── components/   # React components
 └── packages/
-    ├── sdk/                 # Shared utilities
-    └── ui/                  # Shared components
+    ├── sdk/                  # Shared utilities
+    └── ui/                   # Component library
 ```
 
 ---
 
-## Smart Contract
-
-The `shadowlaunch_v1.aleo` program implements:
-
-```leo
-// Core transitions
-transition create_launch(...)     // Deploy new token launch
-transition commit(...)            // Submit sealed bid
-transition reveal(...)            // Reveal commitment
-transition end_reveal_phase(...)  // Finalize and distribute
-
-// Privacy features
-- Commitment hashing (BHP256)
-- Address privacy (hashed storage)
-- Amount hiding until reveal
-```
-
-**Key Mappings:**
-- `launch_phase` — Current phase (commit/reveal/distribution)
-- `commitments` — Commitment hash → exists
-- `reveals` — User reveal status
-- `total_revealed` — Aggregate revealed amount
-
----
-
-## Getting Started
-
-### Prerequisites
-- Node.js 18+
-- Leo Wallet browser extension
-- Aleo testnet credits (get from [faucet](https://faucet.aleo.org))
-
-### Installation
-
-```bash
-# Clone the repository
-git clone https://github.com/your-username/shadowlaunch.git
-cd shadowlaunch
-
-# Install dependencies
-npm install
-
-# Set up environment
-cp apps/web/.env.example apps/web/.env.local
-
-# Initialize database
-cd apps/api && npx prisma db push
-
-# Start development servers
-npm run dev
-```
-
-### Running the App
-
-```bash
-# Terminal 1: Start API server (port 3014)
-cd apps/api && npm run dev
-
-# Terminal 2: Start web app (port 3004)
-cd apps/web && npm run dev
-```
-
-Visit `http://localhost:3004` and connect your Leo Wallet.
-
----
-
-## Demo Flow
-
-1. **Connect Wallet** — Click "Connect" and approve in Leo Wallet
-2. **Create Launch** — Fill out token details, set caps and timing
-3. **Deploy On-Chain** — Sign the transaction to create launch on Aleo
-4. **Share Link** — Send the launch URL to your community
-5. **Commit Phase** — Participants submit sealed bids
-6. **Reveal Phase** — Participants reveal their secrets
-7. **Distribution** — Tokens allocated proportionally
-
----
-
-## API Endpoints
+## API Reference
 
 | Method | Endpoint | Description |
 |--------|----------|-------------|
@@ -204,42 +291,55 @@ Visit `http://localhost:3004` and connect your Leo Wallet.
 | `GET` | `/api/launches` | List all launches |
 | `GET` | `/api/launches/:id` | Get launch details |
 | `PATCH` | `/api/launches/:id` | Update on-chain status |
-| `POST` | `/api/commits/prepare` | Prepare commitment |
-| `POST` | `/api/reveals/prepare` | Prepare reveal |
+| `POST` | `/api/commits/prepare` | Generate commitment |
+| `POST` | `/api/reveals/prepare` | Prepare reveal tx |
 
 ---
 
-## Security Considerations
+## Security Model
 
-- **Commitment Binding:** Once committed, amount cannot be changed
-- **Secret Entropy:** Users must use strong random secrets
-- **Timing:** Block height used for phase transitions (not timestamps)
-- **Overflow Protection:** All arithmetic checked for overflow
+| Aspect | Implementation |
+|--------|----------------|
+| Commitment Binding | Hash cannot be reversed or changed |
+| Secret Entropy | Client-side cryptographic random |
+| Phase Transitions | Block height based (not timestamps) |
+| Overflow Protection | Leo's native overflow checks |
+| Front-run Prevention | Amounts hidden during commit phase |
 
 ---
 
 ## Future Roadmap
 
 - [ ] Credits escrow (lock ALEO during commit)
-- [ ] ARC-21 token integration for distribution
-- [ ] Multi-chain bridge support
-- [ ] Mobile wallet support
-- [ ] Governance for launch curation
+- [ ] ARC-21 token standard integration
+- [ ] Multi-signature launch creation
+- [ ] Cross-chain bridge support
+- [ ] Mobile wallet SDK
 
 ---
 
 ## Built For
 
-**Aleo Hackathon 2025** — Privacy-Preserving DeFi Track
+<div align="center">
+
+**Aleo Hackathon 2025**
+
+*Privacy-Preserving DeFi Track*
+
+</div>
 
 ---
 
 ## License
 
-MIT License — see [LICENSE](LICENSE) for details.
+MIT License — see [LICENSE](LICENSE)
 
 ---
 
-<p align="center">
-  <strong>ShadowLaunch</strong> — Fair launches for everyone.
-</p>
+<div align="center">
+
+**ShadowLaunch** — *Fair launches for everyone.*
+
+[GitHub](https://github.com/alberteinstien62-blip/Shadow-Launch) · [Aleo Explorer](https://testnet.aleoscan.io/program?id=shadowlaunch_v1.aleo)
+
+</div>
