@@ -1,6 +1,6 @@
-// Aleo blockchain utilities
+// Aleo blockchain utilities for ShadowLaunch
 
-import { ALEO_TESTNET_URL, DEFAULT_FEE } from './constants';
+import { ALEO_TESTNET_URL, DEFAULT_FEE, SHADOWLAUNCH_PROGRAM_ID } from './constants';
 import type { TransactionData, TransactionResult } from './types';
 
 /**
@@ -28,7 +28,7 @@ export function randomField(): string {
 }
 
 /**
- * Format an amount as u64 for Aleo
+ * Format an amount as u64 for Aleo (microcredits)
  */
 export function formatAmount(amount: number): string {
   return Math.floor(amount * 1000000).toString() + 'u64';
@@ -43,64 +43,27 @@ export function parseAmount(aleoAmount: string): number {
 }
 
 /**
- * Build a transaction for AnonPay create_link
+ * Build a transaction for ShadowLaunch create_launch
  */
-export function buildCreateLinkTx(
-  linkId: string,
-  secret: string
+export function buildCreateLaunchTx(
+  launchId: string,
+  tokenSymbol: string,
+  totalSupply: number,
+  pricePerToken: number,
+  commitDurationBlocks: number,
+  revealDurationBlocks: number
 ): TransactionData {
   return {
-    programId: 'anonpay_v1.aleo',
-    functionName: 'create_link',
-    inputs: [linkId, secret],
-    fee: DEFAULT_FEE,
-  };
-}
-
-/**
- * Build a transaction for AnonPay send_payment
- */
-export function buildSendPaymentTx(
-  linkId: string,
-  amount: number,
-  recipient: string,
-  secret: string,
-  paymentId: string
-): TransactionData {
-  return {
-    programId: 'anonpay_v1.aleo',
-    functionName: 'send_payment',
+    programId: SHADOWLAUNCH_PROGRAM_ID,
+    functionName: 'create_launch',
     inputs: [
-      linkId,
-      formatAmount(amount),
-      recipient,
-      secret,
-      paymentId,
+      launchId,
+      tokenSymbol,
+      totalSupply.toString() + 'u64',
+      formatAmount(pricePerToken),
+      commitDurationBlocks.toString() + 'u32',
+      revealDurationBlocks.toString() + 'u32',
     ],
-    fee: DEFAULT_FEE,
-  };
-}
-
-/**
- * Build a transaction for PrivyDrop claim
- */
-export function buildClaimTx(
-  airdropId: string,
-  amount: number,
-  proofElements: Array<{ hash: string; isLeft: boolean }>,
-  proofLength: number
-): TransactionData {
-  const inputs = [
-    airdropId,
-    formatAmount(amount),
-    ...proofElements.map(p => `{ hash: ${p.hash}, is_left: ${p.isLeft} }`),
-    proofLength.toString() + 'u8',
-  ];
-
-  return {
-    programId: 'privydrop_v1.aleo',
-    functionName: 'claim',
-    inputs,
     fee: DEFAULT_FEE,
   };
 }
@@ -114,9 +77,25 @@ export function buildCommitTx(
   secret: string
 ): TransactionData {
   return {
-    programId: 'shadowlaunch_v1.aleo',
+    programId: SHADOWLAUNCH_PROGRAM_ID,
     functionName: 'commit',
     inputs: [launchId, formatAmount(amount), secret],
+    fee: DEFAULT_FEE,
+  };
+}
+
+/**
+ * Build a transaction for ShadowLaunch reveal
+ */
+export function buildRevealTx(
+  launchId: string,
+  secret: string,
+  amount: number
+): TransactionData {
+  return {
+    programId: SHADOWLAUNCH_PROGRAM_ID,
+    functionName: 'reveal',
+    inputs: [launchId, secret, formatAmount(amount)],
     fee: DEFAULT_FEE,
   };
 }

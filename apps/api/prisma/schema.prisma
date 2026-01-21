@@ -39,7 +39,7 @@ model Launch {
   creatorAddressHash     String?
 
   // Aleo-specific - On-chain tracking
-  programId              String          @default("shadowlaunch_v1.aleo")
+  programId              String          @default("shadowlaunch_v2.aleo")
   transactionId          String?         // Transaction ID from create_launch
   onChainStatus          String?         // 'pending' | 'confirmed' | 'failed'
   onChainBlockHeight     Int?            // Block height when confirmed

@@ -178,7 +178,7 @@ export class CommitService {
 
       // Build Aleo transaction placeholder
       const transaction = {
-        programId: 'shadowlaunch_v1.aleo',
+        programId: 'shadowlaunch_v2.aleo',
         functionName: 'commit',
         inputs: [
           launchId,

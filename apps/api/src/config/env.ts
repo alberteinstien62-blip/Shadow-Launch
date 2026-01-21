@@ -15,7 +15,7 @@ const envSchema = z.object({
 
   ALEO_NETWORK: z.enum(['testnet', 'mainnet']).default('testnet'),
   ALEO_API_URL: z.string().url().default('https://api.explorer.aleo.org/v1'),
-  ALEO_PROGRAM_ID: z.string().default('shadowlaunch_v1.aleo'),
+  ALEO_PROGRAM_ID: z.string().default('shadowlaunch_v2.aleo'),
 
   CORS_ORIGIN: z.string().default('http://localhost:3000'),
 

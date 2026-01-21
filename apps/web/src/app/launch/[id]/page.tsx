@@ -145,7 +145,7 @@ Join us in building the future of private, fair token launches.`,
   // On-chain
   transactionId: 'at1xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
   onChainStatus: 'confirmed',
-  programId: 'shadowlaunch_v1.aleo',
+  programId: 'shadowlaunch_v2.aleo',
 };
 
 export default function LaunchPage() {
@@ -264,7 +264,7 @@ export default function LaunchPage() {
         const aleoTransaction = Transaction.createTransaction(
           publicKey,
           WalletAdapterNetwork.TestnetBeta,
-          'shadowlaunch_v1.aleo',
+          'shadowlaunch_v2.aleo',
           'commit',
           [
             `${launchIdHash}field`,
@@ -312,7 +312,7 @@ export default function LaunchPage() {
       toast.loading('Looking for your commitment record...', { id: 'reveal' });
 
       // In production, this would query the wallet adapter for records
-      // const records = await getRecords('shadowlaunch_v1.aleo', 'Commitment');
+      // const records = await getRecords('shadowlaunch_v2.aleo', 'Commitment');
       // const matchingRecord = records.find(r => r.launch_id === launchIdHash);
 
       // Simulate reveal success for demo

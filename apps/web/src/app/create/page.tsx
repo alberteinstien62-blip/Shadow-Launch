@@ -370,7 +370,7 @@ export default function CreateLaunchPage() {
       const aleoTransaction = Transaction.createTransaction(
         publicKey,
         WalletAdapterNetwork.TestnetBeta,
-        'shadowlaunch_v1.aleo',
+        'shadowlaunch_v2.aleo',
         'create_launch',
         [
           `${launchIdHash}field`,           // launch_id

@@ -221,7 +221,7 @@ JWT_EXPIRATION=24h
 # Aleo Network
 ALEO_NETWORK=testnet
 ALEO_API_URL=https://api.explorer.aleo.org/v1
-ALEO_PROGRAM_ID=shadowlaunch_v1.aleo
+ALEO_PROGRAM_ID=shadowlaunch_v2.aleo
 
 # CORS
 CORS_ORIGIN=http://localhost:3000

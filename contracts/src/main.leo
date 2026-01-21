@@ -3,7 +3,7 @@
 // "Fair launches. No snipers. No bots."
 // Updated for Leo 3.4+ async/await model
 
-program shadowlaunch_v1.aleo {
+program shadowlaunch_v2.aleo {
 
     // ========================================
     // CONSTRUCTOR (Required for deployment)

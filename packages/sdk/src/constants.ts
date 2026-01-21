@@ -1,7 +1,5 @@
-// Program IDs
-export const ANONPAY_PROGRAM_ID = 'anonpay_v1.aleo';
-export const PRIVYDROP_PROGRAM_ID = 'privydrop_v1.aleo';
-export const SHADOWLAUNCH_PROGRAM_ID = 'shadowlaunch_v1.aleo';
+// Program ID
+export const SHADOWLAUNCH_PROGRAM_ID = 'shadowlaunch_v2.aleo';
 
 // Network URLs
 export const ALEO_TESTNET_URL = 'https://api.explorer.aleo.org/v1/testnet';
