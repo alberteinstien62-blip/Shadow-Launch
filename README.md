@@ -4,14 +4,13 @@
 
 ### Fair Token Launches on Aleo — No Snipers. No Bots. No Front-Running.
 
-[![Aleo](https://img.shields.io/badge/Built%20on-Aleo-blue?style=for-the-badge&logo=data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAADASURBVHgBjZLBDcIwDEV/WoYoG8AGsAFsQDdgBDagG5QN6AZ0g7ABbEA3aDeo/kkdFKWq+6Qoif3t2HEEBkRENV4xPPGO4YkXRORjLMYYaq0V1lpfWGsP1trNf6mqirIsEUKAiBCRz7X5vXOOzrkfZ+fcLqV0+FdUVZWTJPnudW6992ee5x9xHC++RkQ4hEgpSyL64D0+BqF9SkT0a4wxW2PMPgjCI631MQiCTRiGy67rFl3X7YQQq6IoFnVdr/8An6Y/GdZf7e4AAAAASUVORK5CYII=)](https://aleo.org)
+[![Aleo](https://img.shields.io/badge/Built%20on-Aleo-blue?style=for-the-badge)](https://aleo.org)
 [![Leo](https://img.shields.io/badge/Smart%20Contract-Leo-purple?style=for-the-badge)](https://developer.aleo.org/leo/)
 [![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)](LICENSE)
-[![Hackathon](https://img.shields.io/badge/Aleo-Hackathon%202025-orange?style=for-the-badge)](https://aleo.org)
 
 **Privacy-preserving token launchpad eliminating MEV exploitation through ZK-powered commit-reveal mechanics**
 
-[View Demo](#demo-video) · [Smart Contract](#deployed-contract) · [Try It Locally](#quick-start)
+[Smart Contract](#deployed-contract) · [Try It Locally](#quick-start) · [How It Works](#our-solution-zk-commit-reveal)
 
 </div>
 
@@ -27,14 +26,6 @@
 Program ID: shadowlaunch_v1.aleo
 Network: Aleo Testnet Beta
 ```
-
----
-
-## Demo Video
-
-https://github.com/user-attachments/assets/YOUR_VIDEO_ID
-
-> *Full walkthrough: Creating a launch, committing funds, revealing, and claiming tokens*
 
 ---
 
@@ -156,7 +147,7 @@ ShadowLaunch uses Aleo's zero-knowledge proofs to create a **truly fair** launch
 
 ---
 
-## Smart Contract Highlights
+## Smart Contract
 
 ```leo
 program shadowlaunch_v1.aleo {
@@ -255,7 +246,6 @@ Open http://localhost:3004 and connect your Leo Wallet.
 | Database | Prisma ORM, SQLite |
 | Wallet | Leo Wallet Adapter |
 | Animations | Framer Motion |
-| Styling | Cyberpunk Theme, Glass Morphism |
 
 ---
 
@@ -296,7 +286,7 @@ Shadow-Launch/
 
 ---
 
-## Security Model
+## Security
 
 | Aspect | Implementation |
 |--------|----------------|
@@ -308,25 +298,13 @@ Shadow-Launch/
 
 ---
 
-## Future Roadmap
+## Roadmap
 
 - [ ] Credits escrow (lock ALEO during commit)
 - [ ] ARC-21 token standard integration
 - [ ] Multi-signature launch creation
 - [ ] Cross-chain bridge support
 - [ ] Mobile wallet SDK
-
----
-
-## Built For
-
-<div align="center">
-
-**Aleo Hackathon 2025**
-
-*Privacy-Preserving DeFi Track*
-
-</div>
 
 ---
 
