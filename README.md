@@ -20,10 +20,10 @@
 
 | Network | Program ID | Explorer |
 |---------|------------|----------|
-| **Testnet** | `shadowlaunch_v1.aleo` | [View on Aleo Explorer](https://testnet.aleoscan.io/program?id=shadowlaunch_v1.aleo) |
+| **Testnet** | `shadowlaunch_v2.aleo` | [View on Aleo Explorer](https://testnet.aleoscan.io/program?id=shadowlaunch_v2.aleo) |
 
 ```
-Program ID: shadowlaunch_v1.aleo
+Program ID: shadowlaunch_v2.aleo
 Network: Aleo Testnet Beta
 ```
 
@@ -133,7 +133,7 @@ ShadowLaunch uses Aleo's zero-knowledge proofs to create a **truly fair** launch
 │                    ALEO BLOCKCHAIN (Testnet)                     │
 │                                                                  │
 │  ┌─────────────────────────────────────────────────────────┐    │
-│  │              shadowlaunch_v1.aleo                        │    │
+│  │              shadowlaunch_v2.aleo                        │    │
 │  │                                                          │    │
 │  │  Transitions:                     Mappings:              │    │
 │  │  ├─ create_launch()              ├─ launch_phase        │    │
@@ -150,7 +150,7 @@ ShadowLaunch uses Aleo's zero-knowledge proofs to create a **truly fair** launch
 ## Smart Contract
 
 ```leo
-program shadowlaunch_v1.aleo {
+program shadowlaunch_v2.aleo {
     // Private commitment record - only owner can see amount
     record Commitment {
         owner: address,
@@ -318,6 +318,6 @@ MIT License — see [LICENSE](LICENSE)
 
 **ShadowLaunch** — *Fair launches for everyone.*
 
-[GitHub](https://github.com/alberteinstien62-blip/Shadow-Launch) · [Aleo Explorer](https://testnet.aleoscan.io/program?id=shadowlaunch_v1.aleo)
+[GitHub](https://github.com/alberteinstien62-blip/Shadow-Launch) · [Aleo Explorer](https://testnet.aleoscan.io/program?id=shadowlaunch_v2.aleo)
 
 </div>
